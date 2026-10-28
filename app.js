@@ -7,6 +7,9 @@
   const hexInput = $('#hex-input');
   const colorPicker = $('#color-picker');
   const toleranceInput = $('#tolerance');
+  const colorPlane = $('#color-plane');
+  const hueSlider = $('#hue-slider');
+  const planeCursor = $('#plane-cursor');
   const downloadButton = $('#download-button');
   const status = $('#status');
 
@@ -19,6 +22,10 @@
   let isPlaying = true;
   let isSampling = false;
   let isDemoGif = false;
+  let pickerHue = 45;
+  let pickerSaturation = 0.72;
+  let pickerValue = 0.96;
+  let planeDragging = false;
   let timer = 0;
   let renderVersion = 0;
 
@@ -47,6 +54,10 @@
     const normalized = hex.replace(/^#/, '');
     const full = normalized.length === 3 ? normalized.split('').map((c) => c + c).join('') : normalized;
     return [0, 2, 4].map((offset) => parseInt(full.slice(offset, offset + 2), 16));
+  }
+
+  function rgbToHex(rgb) {
+    return `#${rgb.map((channel) => Math.round(channel).toString(16).padStart(2, '0')).join('').toUpperCase()}`;
   }
 
   function hsvToRgb(h, s, v) {
@@ -325,18 +336,72 @@
     }
   }
 
-  function setColor(color, fromText = false) {
+  function setColor(color, fromText = false, deferRefresh = false) {
     const raw = color.replace(/^#/, '').toUpperCase();
     const normalized = raw.length === 3 ? raw.split('').map((character) => character + character).join('') : raw;
     selectedColor = `#${normalized}`;
     if (!fromText) hexInput.value = selectedColor;
     colorPicker.value = selectedColor;
+    syncPrecisionPicker();
     $('#color-error').textContent = '';
     document.querySelectorAll('.swatch').forEach((swatch) => {
       swatch.classList.toggle('selected', swatch.dataset.color.toUpperCase() === selectedColor);
     });
-    refreshColors();
+    if (deferRefresh) queueColorRefresh();
+    else refreshColors();
   }
+
+  function syncPrecisionPicker() {
+    [pickerHue, pickerSaturation, pickerValue] = rgbToHsv(...hexToRgb(selectedColor));
+    const hue = Math.round(pickerHue) % 360;
+    hueSlider.value = String(hue);
+    $('#hue-value').textContent = `${hue}°`;
+    colorPlane.style.setProperty('--plane-hue', `hsl(${hue} 100% 50%)`);
+    planeCursor.style.left = `${pickerSaturation * 100}%`;
+    planeCursor.style.top = `${(1 - pickerValue) * 100}%`;
+    colorPlane.setAttribute('aria-valuenow', String(Math.round(pickerSaturation * 100)));
+    colorPlane.setAttribute('aria-valuetext', `${Math.round(pickerSaturation * 100)} percent saturation, ${Math.round(pickerValue * 100)} percent brightness`);
+  }
+
+  function queueColorRefresh() {
+    clearTimeout(window.colorDebounce);
+    window.colorDebounce = setTimeout(refreshColors, 45);
+  }
+
+  function updateFromPlanePointer(event) {
+    const rect = colorPlane.getBoundingClientRect();
+    pickerSaturation = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+    pickerValue = 1 - clamp((event.clientY - rect.top) / rect.height, 0, 1);
+    setColor(rgbToHex(hsvToRgb(pickerHue, pickerSaturation, pickerValue)), false, true);
+  }
+
+  colorPlane.addEventListener('pointerdown', (event) => {
+    planeDragging = true;
+    colorPlane.setPointerCapture(event.pointerId);
+    updateFromPlanePointer(event);
+    event.preventDefault();
+  });
+  colorPlane.addEventListener('pointermove', (event) => {
+    if (planeDragging) updateFromPlanePointer(event);
+  });
+  colorPlane.addEventListener('pointerup', () => { planeDragging = false; });
+  colorPlane.addEventListener('pointercancel', () => { planeDragging = false; });
+  colorPlane.addEventListener('keydown', (event) => {
+    const step = event.shiftKey ? 0.08 : 0.02;
+    if (event.key === 'ArrowLeft') pickerSaturation = clamp(pickerSaturation - step, 0, 1);
+    else if (event.key === 'ArrowRight') pickerSaturation = clamp(pickerSaturation + step, 0, 1);
+    else if (event.key === 'ArrowUp') pickerValue = clamp(pickerValue + step, 0, 1);
+    else if (event.key === 'ArrowDown') pickerValue = clamp(pickerValue - step, 0, 1);
+    else return;
+    event.preventDefault();
+    setColor(rgbToHex(hsvToRgb(pickerHue, pickerSaturation, pickerValue)), false, true);
+  });
+  hueSlider.addEventListener('input', () => {
+    pickerHue = Number(hueSlider.value);
+    $('#hue-value').textContent = `${pickerHue}°`;
+    colorPlane.style.setProperty('--plane-hue', `hsl(${pickerHue} 100% 50%)`);
+    setColor(rgbToHex(hsvToRgb(pickerHue, pickerSaturation, pickerValue)), false, true);
+  });
 
   document.querySelectorAll('.swatch').forEach((swatch) => {
     swatch.style.setProperty('--swatch', swatch.dataset.color);
