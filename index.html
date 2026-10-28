@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf8ef">
+  <meta name="description" content="Give your Minion GIF a new color. Preview and download your recolored animation right in your browser.">
+  <title>MinionLaugh — Recolor your GIF</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="MinionLaugh home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>MINION<span class="brand-light">LAUGH</span></span>
+    </a>
+    <span class="header-note"><span class="live-dot"></span> Your GIF stays on your device</span>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro">
+      <p class="eyebrow">A LITTLE COLOR, A LOT OF LAUGHS</p>
+      <h1>Give your GIF a <span>new color.</span></h1>
+      <p class="intro-copy">Pick a shade, watch your Minion transform, and save the animation you love.</p>
+    </section>
+
+    <section class="editor" aria-label="GIF color editor">
+      <div class="preview-panel">
+        <div class="panel-topline">
+          <div>
+            <p class="section-kicker">LIVE PREVIEW</p>
+            <p id="file-name" class="file-name">Minion laugh · demo GIF</p>
+          </div>
+          <span id="frame-badge" class="frame-badge">Loading GIF…</span>
+        </div>
+
+        <div id="drop-zone" class="preview-stage">
+          <canvas id="preview" width="256" height="128" aria-label="Animated recolored GIF preview"></canvas>
+          <div id="empty-state" class="empty-state" hidden>
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <strong>Drop a GIF here</strong>
+            <span>or choose a file to get started</span>
+          </div>
+        </div>
+
+        <div class="preview-controls">
+          <button id="play-toggle" class="text-button" type="button" aria-pressed="false" disabled>
+            <span id="play-icon" aria-hidden="true">Ⅱ</span><span id="play-label">Pause preview</span>
+          </button>
+          <button id="sample-toggle" class="text-button sample-button" type="button" disabled>
+            <span aria-hidden="true">◎</span><span>Pick Minion color</span>
+          </button>
+        </div>
+
+        <div id="drop-hint" class="drop-hint">
+          <span>Have another GIF?</span>
+          <label class="browse-link" for="gif-file">Choose a file</label>
+          <span>or drag it here</span>
+          <input id="gif-file" class="visually-hidden" type="file" accept="image/gif,.gif">
+        </div>
+      </div>
+
+      <aside class="controls-panel" aria-label="Color controls">
+        <div class="controls-heading">
+          <p class="section-kicker">MAKE IT YOURS</p>
+          <h2>Choose a color</h2>
+          <p>Try a favorite shade or enter your own color code.</p>
+        </div>
+
+        <div class="palette" role="group" aria-label="Color palette">
+          <button class="swatch" type="button" data-color="#F6C945" aria-label="Yellow" title="Yellow"></button>
+          <button class="swatch" type="button" data-color="#F36B3F" aria-label="Tangerine" title="Tangerine"></button>
+          <button class="swatch" type="button" data-color="#F04468" aria-label="Coral" title="Coral"></button>
+          <button class="swatch" type="button" data-color="#BE65D7" aria-label="Violet" title="Violet"></button>
+          <button class="swatch" type="button" data-color="#5579E8" aria-label="Blue" title="Blue"></button>
+          <button class="swatch" type="button" data-color="#36B9D8" aria-label="Cyan" title="Cyan"></button>
+          <button class="swatch" type="button" data-color="#39A96B" aria-label="Green" title="Green"></button>
+          <button class="swatch" type="button" data-color="#E99A4B" aria-label="Peach" title="Peach"></button>
+        </div>
+
+        <label class="field-label" for="hex-input">CUSTOM COLOR</label>
+        <div class="color-entry">
+          <label class="color-picker-wrap" aria-label="Open color picker">
+            <input id="color-picker" type="color" value="#F6C945" aria-label="Choose a custom color">
+          </label>
+          <input id="hex-input" class="hex-input" type="text" value="#F6C945" maxlength="7" spellcheck="false" aria-label="Hex color code" autocomplete="off">
+          <span class="hex-tag">HEX</span>
+        </div>
+        <p id="color-error" class="field-error" aria-live="polite"></p>
+
+        <div class="range-field">
+          <div class="range-heading">
+            <label class="field-label" for="tolerance">COLOR RANGE</label>
+            <span><strong id="tolerance-value">38</strong>°</span>
+          </div>
+          <input id="tolerance" type="range" min="15" max="70" value="38">
+          <div class="range-labels"><span>Precise</span><span>More shades</span></div>
+        </div>
+
+        <button id="download-button" class="download-button" type="button" disabled>
+          <span>Download GIF</span><span class="download-arrow" aria-hidden="true">↓</span>
+        </button>
+        <p id="status" class="status" role="status" aria-live="polite">Preparing your demo…</p>
+      </aside>
+    </section>
+
+    <footer class="site-footer">
+      <span>Made for joyful little GIFs.</span>
+      <span>Everything is processed locally in your browser.</span>
+    </footer>
+  </main>
+</body>
+</html>
