@@ -103,7 +103,7 @@
   function recolorFrame(frame, target, tolerance) {
     const source = frame.pixels;
     const output = new Uint8ClampedArray(source.length);
-    const [targetH, targetS] = rgbToHsv(...target);
+    const [targetH, targetS, targetV] = rgbToHsv(...target);
     const { width, height } = frame;
     for (let p = 0, pixel = 0; p < source.length; p += 4, pixel += 1) {
       const r = source[p], g = source[p + 1], b = source[p + 2], a = source[p + 3];
@@ -121,7 +121,7 @@
         continue;
       }
       const edge = clamp((tolerance - distance) / 7, 0, 1);
-      const [tr, tg, tb] = hsvToRgb(targetH, targetS, v);
+      const [tr, tg, tb] = hsvToRgb(targetH, targetS, targetV * v);
       output[p] = Math.round(r + (tr - r) * edge);
       output[p + 1] = Math.round(g + (tg - g) * edge);
       output[p + 2] = Math.round(b + (tb - b) * edge);
