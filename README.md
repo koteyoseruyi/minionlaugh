@@ -1,6 +1,6 @@
 # MinionLaugh
 
-MinionLaugh is a small, browser-based GIF recoloring tool. Preview a Minion animation, choose a palette color or enter a custom hex value, sample the original Minion color from the preview, adjust the color range, and download the recolored GIF.
+MinionLaugh is a small, browser-based GIF recoloring tool. Preview a Minion animation, fine-tune a shade with the hue slider and saturation/brightness field, choose a quick color or enter a custom hex value, sample the original Minion color from the preview, adjust the color range, and download the recolored GIF.
 
 **Try it:** [minionlaugh](https://koteyoseruyi.github.io/minionlaugh/)
 
