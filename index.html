@@ -67,9 +67,24 @@
         <div class="controls-heading">
           <p class="section-kicker">MAKE IT YOURS</p>
           <h2>Choose a color</h2>
-          <p>Try a favorite shade or enter your own color code.</p>
+          <p>Fine-tune every shade, or enter a color code.</p>
         </div>
 
+        <label class="field-label picker-label" for="color-plane">SATURATION &amp; BRIGHTNESS</label>
+        <div id="color-plane" class="color-plane" role="slider" tabindex="0" aria-label="Saturation and brightness selector" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" aria-valuetext="72 percent saturation, 96 percent brightness">
+          <span id="plane-cursor" class="plane-cursor" aria-hidden="true"></span>
+          <span id="plane-help" class="plane-help">Click or drag to choose</span>
+        </div>
+        <div class="hue-heading">
+          <label class="field-label" for="hue-slider">HUE</label>
+          <span id="hue-value" class="hue-value">45°</span>
+        </div>
+        <input id="hue-slider" class="hue-slider" type="range" min="0" max="359" value="45" aria-label="Hue">
+
+        <div class="quick-colors-heading">
+          <label class="field-label">QUICK COLORS</label>
+          <span>Tap to apply</span>
+        </div>
         <div class="palette" role="group" aria-label="Color palette">
           <button class="swatch" type="button" data-color="#F6C945" aria-label="Yellow" title="Yellow"></button>
           <button class="swatch" type="button" data-color="#F36B3F" aria-label="Tangerine" title="Tangerine"></button>
@@ -81,7 +96,7 @@
           <button class="swatch" type="button" data-color="#E99A4B" aria-label="Peach" title="Peach"></button>
         </div>
 
-        <label class="field-label" for="hex-input">CUSTOM COLOR</label>
+        <label class="field-label" for="hex-input">HEX COLOR CODE</label>
         <div class="color-entry">
           <label class="color-picker-wrap" aria-label="Open color picker">
             <input id="color-picker" type="color" value="#F6C945" aria-label="Choose a custom color">
